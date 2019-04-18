@@ -1,0 +1,24 @@
+
+
+<div class="splitcontent">
+  <div class="splitcontentleft">
+    <% if @issue.safe_attribute?('status_id') && @allowed_statuses.present? %>
+        <p><%= f.select :status_id, (@allowed_statuses.collect {|p| [p.name, p.id]}), {:required => true},
+                        :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)" %></p>
+        <%= hidden_field_tag 'was_default_status', @issue.status_id, :id => nil if @issue.status == @issue.default_status %>
+    <% else %>
+        <p><label><%= l(:field_status) %></label> <%= @issue.status %></p>
+    <% end %>
+
+    <% if @issue.safe_attribute? 'priority_id' %>
+        <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), {:required => true} %></p>
+    <% end %>
+  </div>
+  <div class="splitcontentright">
+
+
+    <% if @issue.safe_attribute? 'assigned_to_id' %>
+        <p><%= f.select :assigned_to_id, principals_options_for_select(@issue.assignable_users, @issue.assigned_to), :include_blank => true, :required => @issue.required_attribute?('assigned_to_id') %></p>
+    <% end %>
+  </div>
+</div>

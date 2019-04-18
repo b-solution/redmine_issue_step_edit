@@ -1,0 +1,60 @@
+
+<%= stylesheet_link_tag 'style', plugin: 'redmine_issue_step_edit'  %>
+<%= javascript_include_tag 'modernizr', plugin: 'redmine_issue_step_edit'  %>
+
+
+<%= labelled_form_for @issue, :html => {:id => 'issue-form', :multipart => true} do |f| %>
+    <%= error_messages_for 'issue', 'time_entry' %>
+    <%= render :partial => 'conflict' if @conflict %>
+    <div class="box" style="overflow: hidden;">
+      <section>
+        <nav>
+          <ol class="cd-multi-steps text-bottom count" id="li_tab_container">
+            <li class="visited" data-place="0" onclick="gototab('0')"><a href="#0"  ></a></li>
+            <li data-place="1" onclick="gototab('1')"><a href="#0"  ></a></li>
+            <li data-place="2" onclick="gototab('2')"><a href="#0"  ></a></li>
+            <li data-place="3" onclick="gototab('3')"><a href="#0"  ></a></li>
+            <li data-place="4" onclick="gototab('4')"><a href="#0"  ></a></li>
+            <li data-place="5" onclick="gototab('5')"><a href="#0"  ></a></li>
+            <li data-place="6" onclick="gototab('6')"><a href="#0"  ></a></li>
+            <li data-place="7" onclick="gototab('7')"><a href="#0"  ></a></li>
+            <li data-place="8" onclick="gototab('8')"><a href="#0"  ></a></li>
+          </ol>
+        </nav>
+      </section>
+
+      <div>
+
+      </div>
+      <% if @issue.attributes_editable? %>
+          <%= labelled_fields_for :issue, @issue do |f| %>
+              <%= render :partial => 'issues/partials/header', :locals => {:f => f, id_tab: 0}, layout: 'issues/partials/template'  %>
+              <%= render :partial => 'issues/partials/base', :locals => {:f => f, id_tab: 1}, layout: 'issues/partials/template'  %>
+              <%= render :partial => 'issues/partials/attributes/base' , :locals => {:f => f}  %>
+              <%= render :partial => 'issues/partials/view_issues_form_details_bottom' , :locals => {:f => f, id_tab: 6}, layout: 'issues/partials/template'  %>
+          <% end %>
+      <% end %>
+      <%= render partial: 'issues/partials/time_entry_edit', :locals => {:f => f, id_tab: 7}, layout: 'issues/partials/template'  %>
+      <%= render partial: 'issues/partials/journal_notes', :locals => {:f => f, id_tab: 8}, layout: 'issues/partials/template'  %>
+    </div>
+<% end %>
+
+<div id="preview" class="wiki"></div>
+
+<script>
+    function gototab(str_id){
+        id = parseInt(str_id)
+        $('.container_issue').hide();
+        $('#container_'+ id ).show();
+        $('#li_tab_container').find('li').removeClass('visited')
+        for(i = 0; i<= id; i++)
+        {
+            $('#li_tab_container').find('li[data-place="'+i+'"]').addClass('visited')
+        }
+    }
+    <% if params[:goto] %>
+    gototab(<%= params[:goto] %>)
+    <% else %>
+    gototab(0)
+    <% end %>
+</script>

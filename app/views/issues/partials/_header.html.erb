@@ -1,0 +1,22 @@
+<div class="splitcontent">
+  <div class="splitcontentleft">
+    <% if @issue.safe_attribute? 'is_private' %>
+        <p id="issue_is_private_wrap">
+          <%= f.check_box :is_private, :no_label => true %><label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:field_is_private) %></label>
+        </p>
+    <% end %>
+
+    <% if (@issue.safe_attribute?('project_id') || @issue.project_id_changed?) && (!@issue.new_record? || @project.nil? || @issue.copy?) %>
+        <p><%= f.select :project_id, project_tree_options_for_select(@issue.allowed_target_projects, :selected => @issue.project), {:required => true},
+                        :onchange => "updateIssueFrom('#{escape_javascript update_issue_form_path(@project, @issue)}', this)" %></p>
+    <% end %>
+  </div>
+  <div class="splitcontentright">
+
+    <%= call_hook(:view_issues_form_details_top, { :issue => @issue, :form => f }) %>
+    <%= hidden_field_tag 'form_update_triggered_by', '' %>
+    <%= hidden_field_tag 'back_url', params[:back_url], :id => nil if params[:back_url].present? %>
+  </div>
+</div>
+
+

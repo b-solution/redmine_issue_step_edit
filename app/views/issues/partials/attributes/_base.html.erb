@@ -1,0 +1,15 @@
+<%= labelled_fields_for :issue, @issue do |f| %>
+
+    <%= render partial: 'issues/partials/attributes/part1', locals: {f: f,id_tab: 2}, layout: 'issues/partials/template'%>
+    <%= render partial: 'issues/partials/attributes/part2', locals: {f: f, id_tab: 3}, layout: 'issues/partials/template'%>
+
+    <%= render partial: 'issues/partials/attributes/dates', locals: {f: f, id_tab: 4}, layout: 'issues/partials/template' %>
+
+
+    <% if @issue.safe_attribute? 'custom_field_values' %>
+        <%= render :partial => 'issues/form_custom_fields', locals: {f: f, id_tab: 5}, layout: 'issues/partials/template' %>
+    <% end %>
+
+<% end %>
+
+<% include_calendar_headers_tags %>
